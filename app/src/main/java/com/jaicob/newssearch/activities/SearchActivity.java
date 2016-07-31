@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.GridView;
 import com.jaicob.newssearch.R;
 import com.jaicob.newssearch.adapters.ArticleArrayAdapter;
 import com.jaicob.newssearch.models.Article;
+import com.jaicob.newssearch.models.SearchSetting;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -23,21 +25,27 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
+    public static final int SEARCH_SETTINGS_REQUEST = 100;
+
     private EditText etQuery;
     private Button btnSearch;
+    private Button btnResultSettings;
     private GridView gvResults;
     private ArrayList<Article> articles;
     private ArrayAdapter adapter;
+    private SearchSetting searchSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        searchSettings = new SearchSetting();
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -52,6 +60,10 @@ public class SearchActivity extends AppCompatActivity {
         adapter = new ArticleArrayAdapter(this, articles);
 
         gvResults.setAdapter(adapter);
+        setupSearchListener();
+    }
+
+    private void setupSearchListener(){
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -89,8 +101,20 @@ public class SearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SEARCH_SETTINGS_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Log.d("DEBUG", "success");
+                searchSettings = (SearchSetting) Parcels.unwrap(data.getParcelableExtra("searchSettings"));
+            }
+        }
+    }
+
     public void onArticleSearch(View view) {
         String query = etQuery.getText().toString();
+        String sort = searchSettings.getSort();
+        String beginDate = searchSettings.getBeginDate();
 
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -98,6 +122,12 @@ public class SearchActivity extends AppCompatActivity {
         params.put("api-key","dfa5b8e84e3e4a8cae57efd2e62310fb");
         params.put("page",0);
         params.put("q",query);
+        params.put("sort",sort);
+
+        System.out.println("DEBUG " + beginDate);
+        if (!beginDate.isEmpty()) {
+            params.put("begin_date", beginDate);
+        }
 
         client.get(url,params, new JsonHttpResponseHandler(){
             @Override
@@ -105,11 +135,19 @@ public class SearchActivity extends AppCompatActivity {
                 JSONArray jsonResults = null;
                 try {
                     jsonResults = response.getJSONObject("response").getJSONArray("docs");
+                    articles.clear();
                     adapter.addAll( Article.fromJsonArray(jsonResults));
                 } catch (JSONException e) {
+                    Log.d("DEBUG", e.getMessage());
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    public void onResultSettings(View view){
+        Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+        settingsIntent.putExtra("searchSettings", Parcels.wrap(searchSettings));
+        startActivityForResult(settingsIntent, SEARCH_SETTINGS_REQUEST);
     }
 }
