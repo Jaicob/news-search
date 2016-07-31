@@ -3,16 +3,15 @@ package com.jaicob.newssearch.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 
 import com.jaicob.newssearch.R;
 import com.jaicob.newssearch.adapters.ArticleArrayAdapter;
@@ -30,6 +29,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class SearchActivity extends AppCompatActivity {
     public static final int SEARCH_SETTINGS_REQUEST = 100;
@@ -37,9 +37,9 @@ public class SearchActivity extends AppCompatActivity {
     private EditText etQuery;
     private Button btnSearch;
     private Button btnResultSettings;
-    private GridView gvResults;
+    private RecyclerView rvResults;
     private ArrayList<Article> articles;
-    private ArrayAdapter adapter;
+    private ArticleArrayAdapter adapter;
     private SearchSetting searchSettings;
 
     @Override
@@ -55,26 +55,18 @@ public class SearchActivity extends AppCompatActivity {
     public void setupViews(){
         etQuery = (EditText) findViewById(R.id.etQuery);
         btnSearch = (Button) findViewById(R.id.btnSearch);
-        gvResults = (GridView) findViewById(R.id.gvResults);
+        rvResults = (RecyclerView) findViewById(R.id.rvResults);
         articles = new ArrayList<>();
         adapter = new ArticleArrayAdapter(this, articles);
 
-        gvResults.setAdapter(adapter);
-        setupSearchListener();
-    }
-
-    private void setupSearchListener(){
-        gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        rvResults.setAdapter(adapter);
+        rvResults.setLayoutManager(new GridLayoutManager(this,3));
+        rvResults.setItemAnimator(new SlideInUpAnimator());
+        adapter.setOnItemClickListener(new ArticleArrayAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Create an intent to display the article
-                Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
-                // Get the article to display
-                Article article = articles.get(position);
-                // Pass to intent
-                i.putExtra("url",article.getWebUrl());
-                // Launch the activity
-                startActivity(i);
+            public void onItemClick(View view, int position) {
+                String name = articles.get(position).getHeadline();
+                onArticleItemSelect(view,position);
             }
         });
     }
@@ -136,7 +128,8 @@ public class SearchActivity extends AppCompatActivity {
                 try {
                     jsonResults = response.getJSONObject("response").getJSONArray("docs");
                     articles.clear();
-                    adapter.addAll( Article.fromJsonArray(jsonResults));
+                    articles.addAll( Article.fromJsonArray(jsonResults));
+                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.d("DEBUG", e.getMessage());
                     e.printStackTrace();
@@ -149,5 +142,12 @@ public class SearchActivity extends AppCompatActivity {
         Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
         settingsIntent.putExtra("searchSettings", Parcels.wrap(searchSettings));
         startActivityForResult(settingsIntent, SEARCH_SETTINGS_REQUEST);
+    }
+
+    public void onArticleItemSelect(View view, int position){
+        Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
+        Article article = articles.get(position);
+        i.putExtra("url",article.getWebUrl());
+        startActivity(i);
     }
 }

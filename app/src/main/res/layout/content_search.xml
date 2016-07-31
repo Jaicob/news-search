@@ -54,12 +54,16 @@
         android:onClick="onResultSettings"
         android:background="#00ffffff" />
 
-    <GridView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/gvResults"
+        android:id="@+id/rvResults"
         android:layout_below="@+id/btnResultSettings"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:numColumns="4" />
+        android:numColumns="4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/btnResultSettings"
+        android:layout_alignRight="@+id/btnSearch"
+        android:layout_alignEnd="@+id/btnSearch" />
 </RelativeLayout>
