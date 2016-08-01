@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.jaicob.newssearch.EndlessRecyclerViewScrollListener;
 import com.jaicob.newssearch.R;
 import com.jaicob.newssearch.adapters.ArticleArrayAdapter;
 import com.jaicob.newssearch.models.Article;
@@ -57,11 +58,8 @@ public class SearchActivity extends AppCompatActivity {
         btnSearch = (Button) findViewById(R.id.btnSearch);
         rvResults = (RecyclerView) findViewById(R.id.rvResults);
         articles = new ArrayList<>();
-        adapter = new ArticleArrayAdapter(this, articles);
 
-        rvResults.setAdapter(adapter);
-        rvResults.setLayoutManager(new GridLayoutManager(this,3));
-        rvResults.setItemAnimator(new SlideInUpAnimator());
+        adapter = new ArticleArrayAdapter(this, articles);
         adapter.setOnItemClickListener(new ArticleArrayAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -69,6 +67,18 @@ public class SearchActivity extends AppCompatActivity {
                 onArticleItemSelect(view,position);
             }
         });
+
+        rvResults.setAdapter(adapter);
+        rvResults.setItemAnimator(new SlideInUpAnimator());
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
+        rvResults.setLayoutManager(gridLayoutManager);
+        rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                paginatedArticleFetch(page);
+            }
+        });
+
     }
 
     @Override
@@ -128,6 +138,41 @@ public class SearchActivity extends AppCompatActivity {
                 try {
                     jsonResults = response.getJSONObject("response").getJSONArray("docs");
                     articles.clear();
+                    articles.addAll( Article.fromJsonArray(jsonResults));
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    Log.d("DEBUG", e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void paginatedArticleFetch(int page) {
+        String query = etQuery.getText().toString();
+        String sort = searchSettings.getSort();
+        String beginDate = searchSettings.getBeginDate();
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
+        RequestParams params = new RequestParams();
+        params.put("api-key","dfa5b8e84e3e4a8cae57efd2e62310fb");
+        params.put("page",0);
+        params.put("q",query);
+        params.put("sort",sort);
+        params.put("page",page);
+
+        System.out.println("DEBUG " + beginDate);
+        if (!beginDate.isEmpty()) {
+            params.put("begin_date", beginDate);
+        }
+
+        client.get(url,params, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                JSONArray jsonResults = null;
+                try {
+                    jsonResults = response.getJSONObject("response").getJSONArray("docs");
                     articles.addAll( Article.fromJsonArray(jsonResults));
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
