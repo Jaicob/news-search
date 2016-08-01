@@ -38,7 +38,6 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 public class SearchActivity extends AppCompatActivity {
     public static final int SEARCH_SETTINGS_REQUEST = 100;
 
-    private String query;
     private Button btnResultSettings;
     private RecyclerView rvResults;
     private ArrayList<Article> articles;
@@ -50,11 +49,11 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         searchSettings = new SearchSetting();
-        query = "";
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setupViews();
+        paginatedArticleFetch(0,true);
     }
 
     public void setupViews(){
@@ -72,7 +71,7 @@ public class SearchActivity extends AppCompatActivity {
 
         rvResults.setAdapter(adapter);
         rvResults.setItemAnimator(new SlideInUpAnimator());
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,1);
         rvResults.setLayoutManager(gridLayoutManager);
         rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
@@ -100,7 +99,7 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String q) {
-                query = q;
+                searchSettings.setQuery(q);
                 paginatedArticleFetch(0, true);
                 searchView.clearFocus();
                 return true;
@@ -136,19 +135,29 @@ public class SearchActivity extends AppCompatActivity {
     public void paginatedArticleFetch(int page, final boolean newSearch) {
         String sort = searchSettings.getSort();
         String beginDate = searchSettings.getBeginDate();
+        String fq = searchSettings.getFq();
+        String query = searchSettings.getQuery();
 
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://api.nytimes.com/svc/search/v2/articlesearch.json";
         RequestParams params = new RequestParams();
         params.put("api-key","dfa5b8e84e3e4a8cae57efd2e62310fb");
-        params.put("page",0);
-        params.put("q",query);
-        params.put("sort",sort);
         params.put("page",page);
+        if (!query.isEmpty()) params.put("q",query);
+        if (!sort.isEmpty()) params.put("sort",sort);
+        if (!fq.isEmpty()) params.put("fq",fq);
+        if (!beginDate.isEmpty()) params.put("begin_date", beginDate);
 
-        System.out.println("DEBUG " + beginDate);
-        if (!beginDate.isEmpty()) {
-            params.put("begin_date", beginDate);
+        switch (searchSettings.getArticleLength()){
+            case SHORT:
+                params.put("fq","word_count:[* TO 400] ");
+                break;
+            case MEDIUM:
+                params.put("fq","word_count:[400 TO 2000] ");
+                break;
+            case LONG:
+                params.put("fq","word_count:[2000 TO *] ");
+                break;
         }
 
         client.get(url,params, new JsonHttpResponseHandler(){

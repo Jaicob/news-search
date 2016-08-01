@@ -10,7 +10,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.jaicob.newssearch.activities.SettingsActivity"
-    tools:showIn="@layout/activity_settings">
+    tools:showIn="@layout/activity_settings"
+    android:background="#eeeeee">
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -18,12 +19,15 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/rgSortGroup">
+        android:id="@+id/rgSortGroup"
+        android:background="#ffffff"
+        android:padding="15dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sort"/>
+            android:text="SORT BY"
+            android:textSize="15dp"/>
 
         <RadioButton
             android:layout_width="match_parent"
@@ -50,12 +54,16 @@
         android:id="@+id/rgBeginDateGroup"
         android:layout_below="@+id/rgSortGroup"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"
+        android:background="#ffffff"
+        android:padding="15dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Publish Date"/>
+            android:text="PUBLISHED WHEN"
+            android:textSize="15dp"/>
 
         <RadioButton
             android:layout_width="match_parent"
@@ -101,5 +109,59 @@
             android:layout_gravity="center_horizontal"
             android:checked="false"
             android:onClick="onDateRadioButtonClick"/>
+    </RadioGroup>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rgArtliceLengthGroup"
+        android:layout_below="@+id/rgBeginDateGroup"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"
+        android:background="#ffffff"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PUBLISHED WHEN"
+            android:textSize="15dp"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Short"
+            android:id="@+id/rbtnShort"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onArticleLengthRadioButtonClick"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Medium"
+            android:id="@+id/rbtnMedium"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onArticleLengthRadioButtonClick"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Long"
+            android:id="@+id/rbtnLong"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onArticleLengthRadioButtonClick"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Any"
+            android:id="@+id/rbtnAny"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onArticleLengthRadioButtonClick"/>
     </RadioGroup>
 </RelativeLayout>

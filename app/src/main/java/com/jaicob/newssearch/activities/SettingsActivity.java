@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.jaicob.newssearch.R;
+import com.jaicob.newssearch.models.ArticleLength;
 import com.jaicob.newssearch.models.BeginDateRange;
 import com.jaicob.newssearch.models.SearchSetting;
 
@@ -26,6 +27,11 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioButton rbtnThisMonth;
     private RadioButton rbtnThisYear;
     private RadioButton rbtnUnset;
+    private RadioButton rbtnAny;
+    private RadioButton rbtnShort;
+    private RadioButton rbtnMedium;
+    private RadioButton rbtnLong;
+
     SearchSetting searchSettings;
 
 
@@ -55,6 +61,10 @@ public class SettingsActivity extends AppCompatActivity {
         rbtnThisMonth = (RadioButton) findViewById(R.id.rbtnThisMonth);
         rbtnThisYear = (RadioButton) findViewById(R.id.rbtnThisYear);
         rbtnUnset = (RadioButton) findViewById(R.id.rbtnUnset);
+        rbtnAny = (RadioButton) findViewById(R.id.rbtnAny);
+        rbtnShort = (RadioButton) findViewById(R.id.rbtnShort);
+        rbtnMedium =  (RadioButton) findViewById(R.id.rbtnMedium);
+        rbtnLong =  (RadioButton) findViewById(R.id.rbtnLong);
 
         switch (searchSettings.getSort()){
             case SearchSetting.NEWEST:
@@ -80,6 +90,21 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
             case UNSET:
                 rbtnUnset.setChecked(true);
+                break;
+        }
+
+        switch (searchSettings.getArticleLength()){
+            case SHORT:
+                rbtnShort.setChecked(true);
+                break;
+            case MEDIUM:
+                rbtnMedium.setChecked(true);
+                break;
+            case LONG:
+                rbtnLong.setChecked(true);
+                break;
+            case ANY:
+                rbtnAny.setChecked(true);
                 break;
         }
     }
@@ -127,6 +152,33 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.rbtnUnset:
                 if (checked){
                     searchSettings.setBeginDateRange(BeginDateRange.UNSET);
+                }
+                break;
+        }
+    }
+
+    public void onArticleLengthRadioButtonClick(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+
+        switch (view.getId()){
+            case R.id.rbtnShort:
+                if (checked){
+                    searchSettings.setArticleLength(ArticleLength.SHORT);
+                }
+                break;
+            case R.id.rbtnMedium:
+                if (checked){
+                    searchSettings.setArticleLength(ArticleLength.MEDIUM);
+                }
+                break;
+            case R.id.rbtnLong:
+                if (checked){
+                    searchSettings.setArticleLength(ArticleLength.LONG);
+                }
+                break;
+            case R.id.rbtnAny:
+                if (checked){
+                    searchSettings.setArticleLength(ArticleLength.ANY);
                 }
                 break;
         }

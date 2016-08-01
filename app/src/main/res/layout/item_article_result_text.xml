@@ -7,13 +7,6 @@
     android:layout_marginBottom="10dp"
     android:background="#ffffff">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ivImage"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,13 +14,12 @@
         android:maxLines="1"
         android:text="TextView"
         android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_marginTop="10dp"/>
+        android:textSize="30dp"/>
 
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="24dp">
+        android:layout_height="47dp">
 
         <TextView
             android:id="@+id/tvDate"
@@ -45,4 +37,5 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"/>
     </RelativeLayout>
+
 </LinearLayout>

@@ -17,10 +17,16 @@ public class SearchSetting {
 
     String sort;
     BeginDateRange beginDateRange;
+    String query;
+    String fq;
+    ArticleLength articleLength;
 
     public SearchSetting(){
         this.sort = NEWEST;
         this.beginDateRange = BeginDateRange.UNSET;
+        this.query = "";
+        this.fq = "type_of_material:\"News\"";
+        this.articleLength = ArticleLength.ANY;
     }
 
     public String getBeginDate() {
@@ -64,4 +70,27 @@ public class SearchSetting {
         this.sort = sort;
     }
 
+    public String getFq() {
+        return this.fq;
+    }
+
+    public void setFq(String fq){
+        this.fq = fq;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
+    public ArticleLength getArticleLength() {
+        return articleLength;
+    }
+
+    public void setArticleLength(ArticleLength articleLength) {
+        this.articleLength = articleLength;
+    }
 }
