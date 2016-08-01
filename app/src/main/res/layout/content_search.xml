@@ -12,26 +12,6 @@
     tools:context=".activities.SearchActivity"
     tools:showIn="@layout/activity_search">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etQuery"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/btnSearch"
-        android:layout_toStartOf="@+id/btnSearch"
-        android:hint="@string/search_hint" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search_hint"
-        android:id="@+id/btnSearch"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="onArticleSearch"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,7 +29,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnResultSettings"
         android:src="@drawable/ic_sort"
-        android:layout_below="@id/btnSearch"
         android:layout_alignParentRight="true"
         android:onClick="onResultSettings"
         android:background="#00ffffff" />
@@ -63,7 +42,5 @@
         android:numColumns="4"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/btnResultSettings"
-        android:layout_alignRight="@+id/btnSearch"
-        android:layout_alignEnd="@+id/btnSearch" />
+        android:layout_toStartOf="@+id/btnResultSettings" />
 </RelativeLayout>
