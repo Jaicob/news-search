@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">NewsSearch</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_hint">Search</string>
+    <string name="title_activity_article">ArticleActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="search_settings_newest">Newest</string>
+    <string name="search_settings_oldest" >Oldest</string>
+    <string name="search_setting_today">Today</string>
+    <string name="search_setting_this_week">This Week</string>
+    <string name="search_setting_this_month">This Month</string>
+    <string name="search_setting_this_year">This Year</string>
+    <string name="search_setting_none">None</string>
+</resources>

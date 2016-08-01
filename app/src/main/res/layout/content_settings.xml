@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.jaicob.newssearch.activities.SettingsActivity"
+    tools:showIn="@layout/activity_settings">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/rgSortGroup">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sort"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_settings_newest"
+            android:id="@+id/rbtnNewest"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onSortRadioButtonClick"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_settings_oldest"
+            android:id="@+id/rbtnOldest"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onSortRadioButtonClick"/>
+    </RadioGroup>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rgBeginDateGroup"
+        android:layout_below="@+id/rgSortGroup"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Publish Date"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_setting_today"
+            android:id="@+id/rbtnToday"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onDateRadioButtonClick"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_setting_this_week"
+            android:id="@+id/rbtnThisWeek"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onDateRadioButtonClick"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_setting_this_month"
+            android:id="@+id/rbtnThisMonth"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onDateRadioButtonClick"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_setting_this_year"
+            android:id="@+id/rbtnThisYear"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onDateRadioButtonClick"/>
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_setting_none"
+            android:id="@+id/rbtnUnset"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:onClick="onDateRadioButtonClick"/>
+    </RadioGroup>
+</RelativeLayout>
